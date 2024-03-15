@@ -1,5 +1,5 @@
 import connect.ConnectFourConsoleController;
-import connect.ConnectFourModelImpl;
+import connect.ConnectFourView;
 import java.io.InputStreamReader;
 
 /**
@@ -7,13 +7,14 @@ import java.io.InputStreamReader;
  */
 public class Main {
   /**
-    * Run a Connect Four game interactively on the console.
-    *
-    * @param args command-line arguments
-    */
+   * Run a Connect Four game interactively on the console.
+   *
+   * @param args command-line arguments
+   */
   public static void main(String[] args) {
     Readable input = new InputStreamReader(System.in);
     Appendable output = System.out;
-    new ConnectFourConsoleController(input, output).playGame(new ConnectFourModelImpl(6, 7));
+    ConnectFourView view = new ConnectFourView(output);
+    new ConnectFourConsoleController(input, view).playGame(new ConnectFourModelImpl(6, 7));
   }
 }
