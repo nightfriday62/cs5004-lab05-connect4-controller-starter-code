@@ -52,7 +52,7 @@ public class ConnectFourConsoleController implements ConnectFourController {
             Player winner = m.getWinner();
             if (winner == null) {
               this.view.displayGameOver(null);
-            } else if(winner == Player.RED) {
+            } else if (winner == Player.RED) {
               this.view.displayGameOver("RED");
             } else if (winner == Player.YELLOW) {
               this.view.displayGameOver("YELLOW");

@@ -1,5 +1,8 @@
 package connect;
 
+/**
+ * A mock model for testing the ConnectFourController class.
+ */
 public class ConnectFourModelMock implements ConnectFourModel {
 
   private final boolean[] gameOverResponses;
