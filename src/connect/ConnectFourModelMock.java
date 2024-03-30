@@ -25,9 +25,7 @@ public class ConnectFourModelMock implements ConnectFourModel {
 
   @Override
   public void makeMove(int column) throws IllegalArgumentException {
-    if (gameOverResponses[responseIndex]) {
-      throw new IllegalArgumentException("Invalid move");
-    } else if (column < 0 || column >= 7) {
+    if (column < 0 || column >= 7) {
       throw new IllegalArgumentException("The column is out of bounds");
     }
   }

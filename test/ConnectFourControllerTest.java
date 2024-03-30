@@ -1,14 +1,15 @@
 import static org.junit.Assert.assertEquals;
 
 import connect.ConnectFourConsoleController;
-import connect.ConnectFourView;
-import java.io.StringReader;
-import org.junit.Before;
-import org.junit.Test;
 import connect.ConnectFourModel;
 import connect.ConnectFourModelMock;
+import connect.ConnectFourView;
+import java.io.StringReader;
+import org.junit.Test;
 
-
+/**
+ * This is the test for the ConnectFourController class.
+ */
 public class ConnectFourControllerTest {
   private ConnectFourConsoleController controller;
 
@@ -19,16 +20,18 @@ public class ConnectFourControllerTest {
    */
   @Test
   public void testPlayGameTie() {
-    boolean[] gameOverResponses = {true, true};
+    boolean[] gameOverResponses = {false, true, true};
     String toStringResponse = "tie";
     ConnectFourModel model = new ConnectFourModelMock(gameOverResponses, toStringResponse);
-    Readable in = new StringReader("k\n");
+    Readable in = new StringReader("5 n\n");
     Appendable out = new StringBuilder();
     ConnectFourView view = new ConnectFourView(out);
     this.controller = new ConnectFourConsoleController(in, view);
     controller.playGame(model);
-    assertEquals("tie\n" + "Game over! It's a tie!\n" +
-        "Do you want to play again? (yes/no)\n", out.toString());
+    assertEquals("tie\n"
+        + "Player RED, make your move: \n"
+        + "tie\n" + "Game over! It's a tie!\n"
+        + "Do you want to play again? (yes/no)\n", out.toString());
   }
 
   /**
@@ -37,16 +40,17 @@ public class ConnectFourControllerTest {
    */
   @Test
   public void testPlayGameWinner() {
-    boolean[] gameOverResponses = {true, true};
+    boolean[] gameOverResponses = {false, true, true};
     String toStringResponse = "winner";
     ConnectFourModel model = new ConnectFourModelMock(gameOverResponses, toStringResponse);
-    Readable in = new StringReader("n");
+    Readable in = new StringReader("5 n");
     Appendable out = new StringBuilder();
     ConnectFourView view = new ConnectFourView(out);
     this.controller = new ConnectFourConsoleController(in, view);
     controller.playGame(model);
-    assertEquals("winner\n" + "Game over! RED is the winner!\n" +
-        "Do you want to play again? (yes/no)\n", out.toString());
+    assertEquals("winner\n" + "Player RED, make your move: \n"
+        + "winner\n" + "Game over! RED is the winner!\n"
+        + "Do you want to play again? (yes/no)\n", out.toString());
   }
 
   /**
@@ -59,17 +63,14 @@ public class ConnectFourControllerTest {
     boolean[] gameOverResponses = {false, true, true};
     String toStringResponse = "notNumber";
     ConnectFourModel model = new ConnectFourModelMock(gameOverResponses, toStringResponse);
-    Readable in = new StringReader("k" + System.lineSeparator() + "k" + System.lineSeparator());
+    Readable in = new StringReader("k 0");
     Appendable out = new StringBuilder();
     ConnectFourView view = new ConnectFourView(out);
     this.controller = new ConnectFourConsoleController(in, view);
     controller.playGame(model);
     assertEquals("notNumber\n"
         + "Player RED, make your move: \n"
-        + "Is not a number!\n"
-        + "notNumber\n"
-        + "Game over! It's a tie!\n"
-        + "Do you want to play again? (yes/no)\n", out.toString());
+        + "Is not a number!\n", out.toString());
   }
 
   /**
@@ -77,21 +78,38 @@ public class ConnectFourControllerTest {
    */
   @Test
   public void testPlayGamePlayAgain() {
-    boolean[] gameOverResponses = {true, true, true, true};
+    boolean[] gameOverResponses = {false, true, false};
     String toStringResponse = "playAgain";
     ConnectFourModel model = new ConnectFourModelMock(gameOverResponses, toStringResponse);
-    Readable in = new StringReader("y n");
+    Readable in = new StringReader("5 y 0");
     Appendable out = new StringBuilder();
     ConnectFourView view = new ConnectFourView(out);
     this.controller = new ConnectFourConsoleController(in, view);
     controller.playGame(model);
-    assertEquals("playAgain\n"
-        + "Game over! It's a tie!\n"
-        + "Do you want to play again? (yes/no)\n"
-        + "playAgain\n"
-        + "Game over! It's a tie!\n"
-        + "Do you want to play again? (yes/no)\n", out.toString());
+    assertEquals("playAgain\n" + "Player RED, make your move: \n"
+        + "playAgain\n" + "Game over! It's a tie!\n"
+        + "Do you want to play again? (yes/no)\n" + "playAgain\n"
+        + "Player RED, make your move: \n" + "Game quit! Ending game state:\n"
+        + "playAgain\n", out.toString());
   }
+
+  /**
+   * Test the player can quit the game by entering 0. 3.5
+   */
+  @Test
+  public void testPlayGameQuit() {
+    boolean[] gameOverResponses = {false};
+    String toStringResponse = "quit";
+    ConnectFourModel model = new ConnectFourModelMock(gameOverResponses, toStringResponse);
+    Readable in = new StringReader("0");
+    Appendable out = new StringBuilder();
+    ConnectFourView view = new ConnectFourView(out);
+    this.controller = new ConnectFourConsoleController(in, view);
+    controller.playGame(model);
+    assertEquals("quit\n" + "Player RED, make your move: \n"
+        + "Game quit! Ending game state:\nquit\n", out.toString());
+  }
+
   /**
    * Test the controller passes the IllegalArgumentException when the
    * column is out of bounds. 3.6
@@ -108,10 +126,7 @@ public class ConnectFourControllerTest {
     controller.playGame(model);
     assertEquals("outOFBounds\n"
         + "Player RED, make your move: \n"
-        + "Not a valid number: Invalid move\n"
-        + "outOFBounds\n"
-        + "Game over! It's a tie!\n"
-        + "Do you want to play again? (yes/no)\n", out.toString());
+        + "Not a valid number: The column is out of bounds\n", out.toString());
   }
 
   /**

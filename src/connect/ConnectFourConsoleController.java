@@ -5,11 +5,8 @@ package connect;
 // The controller should use the model to execute the game and the view to convey
 // the game state to the user.
 
-import static java.lang.System.exit;
-
 import java.io.IOException;
 import java.util.InputMismatchException;
-import java.util.Objects;
 import java.util.Scanner;
 
 /**
@@ -35,7 +32,7 @@ public class ConnectFourConsoleController implements ConnectFourController {
   @Override
   public void playGame(ConnectFourModel m) throws IllegalArgumentException {
     Scanner scanner = new Scanner(in);
-    int move = 99;
+    int move;
     if (m == null) {
       throw new IllegalArgumentException("Model cannot be null");
     }
@@ -47,33 +44,34 @@ public class ConnectFourConsoleController implements ConnectFourController {
           move = scanner.nextInt();
           if (move == 0) {
             this.view.displayGameQuit(m.toString());
-            exit(0);
+            break;
           }
           m.makeMove(move);
+          if (m.isGameOver()) {
+            this.view.displayGameState(m.toString());
+            switch (m.getWinner()) {
+              case RED:
+                this.view.displayGameOver("RED");
+                break;
+              case YELLOW:
+                this.view.displayGameOver("YELLOW");
+                break;
+              case null:
+                this.view.displayGameOver(null);
+                break;
+            }
+            this.view.askPlayAgain();
+            String playAgain = scanner.next();
+            if ("y".equals(playAgain)) {
+              m.resetBoard();
+            }
+          }
         } catch (InputMismatchException e) {
           this.view.displayErrorMessage("Is not a number!");
           scanner.nextLine();
         } catch (IllegalArgumentException e) {
           this.view.displayInvalidNumber(e.getMessage());
         }
-      }
-      this.view.displayGameState(m.toString());
-      switch (m.getWinner()) {
-        case RED:
-          this.view.displayGameOver("RED");
-          break;
-        case YELLOW:
-          this.view.displayGameOver("YELLOW");
-          break;
-        case null:
-          this.view.displayGameOver(null);
-          break;
-      }
-      this.view.askPlayAgain();
-      String playAgain = scanner.next();
-      if ("y".equals(playAgain)) {
-        m.resetBoard();
-        this.playGame(m);
       }
     } catch (IOException e) {
       e.printStackTrace();
