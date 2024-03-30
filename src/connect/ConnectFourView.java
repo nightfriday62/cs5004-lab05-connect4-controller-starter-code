@@ -37,6 +37,12 @@ public class ConnectFourView {
    * @throws IOException if an I/O error occurs
    */
   public void displayPlayerTurn(String player) throws IOException {
+    if ("R".equals(player)) {
+      player = "RED";
+    }
+    if ("Y".equals(player)) {
+      player = "YELLOW";
+    }
     out.append("Player ").append(player).append(", make your move: ").append("\n");
   }
 

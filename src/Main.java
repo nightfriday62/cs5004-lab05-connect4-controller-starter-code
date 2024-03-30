@@ -1,4 +1,5 @@
 import connect.ConnectFourConsoleController;
+import connect.ConnectFourModelImpl;
 import connect.ConnectFourView;
 import java.io.InputStreamReader;
 
