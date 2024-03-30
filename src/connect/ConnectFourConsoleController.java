@@ -49,16 +49,13 @@ public class ConnectFourConsoleController implements ConnectFourController {
           m.makeMove(move);
           if (m.isGameOver()) {
             this.view.displayGameState(m.toString());
-            switch (m.getWinner()) {
-              case RED:
-                this.view.displayGameOver("RED");
-                break;
-              case YELLOW:
-                this.view.displayGameOver("YELLOW");
-                break;
-              case null:
-                this.view.displayGameOver(null);
-                break;
+            Player winner = m.getWinner();
+            if (winner == null) {
+              this.view.displayGameOver(null);
+            } else if(winner == Player.RED) {
+              this.view.displayGameOver("RED");
+            } else if (winner == Player.YELLOW) {
+              this.view.displayGameOver("YELLOW");
             }
             this.view.askPlayAgain();
             String playAgain = scanner.next();
