@@ -5,6 +5,8 @@ package connect;
 // The controller should use the model to execute the game and the view to convey
 // the game state to the user.
 
+import static java.lang.System.exit;
+
 import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Objects;
@@ -44,7 +46,8 @@ public class ConnectFourConsoleController implements ConnectFourController {
           this.view.displayPlayerTurn(m.getTurn().getDisplayName());
           move = scanner.nextInt();
           if (move == 0) {
-            break;
+            this.view.displayGameQuit(m.toString());
+            exit(0);
           }
           m.makeMove(move);
         } catch (InputMismatchException e) {
@@ -54,28 +57,23 @@ public class ConnectFourConsoleController implements ConnectFourController {
           this.view.displayInvalidNumber(e.getMessage());
         }
       }
-      if (m.isGameOver()) {
-        this.view.displayGameState(m.toString());
-        switch (m.getWinner()) {
-          case RED:
-            this.view.displayGameOver("RED");
-            break;
-          case YELLOW:
-            this.view.displayGameOver("YELLOW");
-            break;
-          case null:
-            this.view.displayGameOver(null);
-            break;
-        }
-        this.view.askPlayAgain();
-        String playAgain = scanner.next();
-        if ("y".equals(playAgain)) {
-          m.resetBoard();
-          this.playGame(m);
-        }
+      this.view.displayGameState(m.toString());
+      switch (m.getWinner()) {
+        case RED:
+          this.view.displayGameOver("RED");
+          break;
+        case YELLOW:
+          this.view.displayGameOver("YELLOW");
+          break;
+        case null:
+          this.view.displayGameOver(null);
+          break;
       }
-      if (move == 0) {
-        this.view.displayGameQuit(m.toString());
+      this.view.askPlayAgain();
+      String playAgain = scanner.next();
+      if ("y".equals(playAgain)) {
+        m.resetBoard();
+        this.playGame(m);
       }
     } catch (IOException e) {
       e.printStackTrace();
